@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>USA Carrier Picker — Shipping Guide (UMVP)</title>
+<style>
+  :root{
+    --bg:#0f1724; --card:#0b1220; --muted:#9aa7b2; --accent:#06b6d4;
+    --white:#e6eef6; --success:#10b981; --danger:#f97373;
+  }
+  *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
+  body{margin:0;background:linear-gradient(180deg,#071024,#0b1220);color:var(--white);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+  .card{width:980px;max-width:96%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:28px;box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+  h1{margin:0 0 6px;font-size:20px}
+  p.lead{margin:0 0 18px;color:var(--muted);font-size:14px}
+  .row{display:flex;gap:18px;align-items:flex-start}
+  .left{flex:1;min-width:260px}
+  .right{width:420px;max-width:44%}
+  label{display:block;font-size:13px;margin-bottom:8px;color:var(--muted)}
+  select,button,input{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--white);font-size:15px}
+  .result{background:linear-gradient(180deg,rgba(6,182,212,0.06),rgba(6,182,212,0.03));padding:16px;border-radius:10px;border:1px solid rgba(6,182,212,0.06);margin-bottom:12px}
+  .carrier-title{display:flex;justify-content:space-between;align-items:center}
+  .carrier-name{font-weight:600;font-size:16px}
+  .tag{font-size:13px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.03);color:var(--muted)}
+  .cta{display:block;margin-top:12px;text-decoration:none;padding:10px 12px;border-radius:8px;background:var(--accent);color:#042022;font-weight:600;text-align:center}
+  .meta{font-size:13px;color:var(--muted);margin-top:8px}
+  .foot{margin-top:14px;color:var(--muted);font-size:13px}
+  .small{font-size:13px;color:var(--muted)}
+  .controls{display:flex;gap:12px;margin-top:12px}
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--white)}
+  .affiliate-note{font-size:12px;color:var(--muted);margin-top:8px}
+  footer{margin-top:20px;color:var(--muted);font-size:12px}
+  @media (max-width:800px){.row{flex-direction:column}.right{width:100%}}
+</style>
+</head>
+<body>
+<div class="card" role="main" aria-labelledby="title">
+  <h1 id="title">USA Carrier Picker — Domestic Shipping Guide (UMVP)</h1>
+  <p class="lead">Pick the single most important criterion for your next shipment and we’ll recommend the best carrier & service for small e-commerce sellers. No rate APIs, instant decision, affiliate links for monetization.</p>
+
+  <div class="row">
+    <div class="left">
+      <label for="priority">What is your main priority for your next shipment?</label>
+      <select id="priority" aria-label="Select your shipping priority">
+        <option value="">— choose priority —</option>
+        <option value="cost">Lowest possible cost (I can wait 5–7 days)</option>
+        <option value="speed">Fastest possible delivery (1–3 days)</option>
+        <option value="heavy">Best rates for a 5lb+ shipment</option>
+        <option value="commercial">Lowest commercial rate possible</option>
+      </select>
+
+      <div class="controls">
+        <button id="pickBtn">Get recommendation</button>
+        <button id="exportCsv" class="ghost">Export carriers CSV</button>
+        <button id="toSheet" class="ghost">Open in Google Sheets</button>
+      </div>
+
+      <div class="foot">
+        <div class="small">Data: four core carriers (USPS, FedEx, UPS, Pirate Ship). Edit data in the JSON below if you need to tweak copy, ratings or affiliate links.</div>
+      </div>
+
+      <pre id="jsonData" style="display:none"></pre>
+    </div>
+
+    <div class="right" aria-live="polite">
+      <div id="resultBox" class="result" style="display:none">
+        <div class="carrier-title">
+          <div>
+            <div class="carrier-name" id="carrierName">Carrier Name</div>
+            <div class="small" id="carrierFocus">Primary service focus</div>
+          </div>
+          <div class="tag" id="carrierTag">UMVP Tag</div>
+        </div>
+
+        <div class="meta" id="carrierRating">Rating: ★★★★☆</div>
+        <p id="carrierBlurb" style="margin-top:8px;color:var(--white)"></p>
+        <a id="ctaLink" class="cta" target="_blank" rel="noopener noreferrer">Open carrier signup</a>
+        <div class="affiliate-note">This site may receive compensation for referrals. See full disclosure in footer.</div>
+      </div>
+
+      <div id="noChoice" style="color:var(--muted)">Make a selection to see a recommendation.</div>
+    </div>
+  </div>
+
+  <footer>
+    <div>Affiliate disclosure: We may receive referral compensation when you sign up via our links. We recommend options based on typical small-business needs — always confirm exact prices and terms on the carrier websites.</div>
+  </footer>
+</div>
+
+<script>
+/* === Data: core carriers ===
+   Keep this JSON small and editable — or load from carriers.json.
+*/
+const carriers = [
+  {
+    "id":"usps",
+    "name":"USPS",
+    "focus":"Lightweight Parcels & Last-mile",
+    "tag":"Cost & Last-Mile",
+    "rating":3,
+    "blurb":"Best for lightweight residential shipments and low-cost ground shipping. Good for small e-commerce sellers who prioritize price over speed.",
+    "signup":"https://www.usps.com/business/online-shipping.htm"
+  },
+  {
+    "id":"fedex",
+    "name":"FedEx",
+    "focus":"Express / B2B Ground",
+    "tag":"Speed & Reliability",
+    "rating":4,
+    "blurb":"Strong for express and time-sensitive deliveries. Better for B2B and urgent deliveries where speed and reliability matter.",
+    "signup":"https://www.fedex.com/en-us/shipping/online-tools.html"
+  },
+  {
+    "id":"ups",
+    "name":"UPS",
+    "focus":"Heavy/Volume Ground & Freight",
+    "tag":"Heavier / Volume",
+    "rating":4,
+    "blurb":"Good for heavier packages and higher volume shops. Strong ground network and many business tools for frequent shippers.",
+    "signup":"https://www.ups.com/us/en/support/create-an-account.page"
+  },
+  {
+    "id":"pirateship",
+    "name":"Pirate Ship",
+    "focus":"Parcel broker / discounted rates",
+    "tag":"Best Rates (Discount)",
+    "rating":5,
+    "blurb":"Parcel broker that exposes deep discounts for USPS and others. Great for low commercial rates and sellers who want simple discounts without contracts.",
+    "signup":"https://www.pirateship.com/?ref=your-affiliate-code"
+  }
+];
+
+/* Mapping user option -> recommended carrier(s) */
+const mapping = {
+  "cost":"usps",
+  "speed":"fedex",
+  "heavy":"ups",
+  "commercial":"pirateship"
+};
+
+/* Utilities */
+function getCarrierById(id){ return carriers.find(c => c.id === id); }
+function ratingStars(n){
+  n = Math.max(0, Math.min(5, n||0));
+  return '★'.repeat(n) + '☆'.repeat(5-n);
+}
+
+/* UI hooks */
+const priority = document.getElementById('priority');
+const pickBtn = document.getElementById('pickBtn');
+const resultBox = document.getElementById('resultBox');
+const carrierName = document.getElementById('carrierName');
+const carrierFocus = document.getElementById('carrierFocus');
+const carrierTag = document.getElementById('carrierTag');
+const carrierRating = document.getElementById('carrierRating');
+const carrierBlurb = document.getElementById('carrierBlurb');
+const ctaLink = document.getElementById('ctaLink');
+const noChoice = document.getElementById('noChoice');
+
+pickBtn.addEventListener('click', ()=> {
+  const val = priority.value;
+  if(!val){ resultBox.style.display='none'; noChoice.style.display='block'; return; }
+  const cid = mapping[val];
+  const carrier = getCarrierById(cid);
+  if(!carrier){ resultBox.style.display='none'; noChoice.style.display='block'; return; }
+
+  carrierName.textContent = carrier.name;
+  carrierFocus.textContent = carrier.focus;
+  carrierTag.textContent = carrier.tag;
+  carrierRating.textContent = 'Rating: ' + ratingStars(carrier.rating);
+  carrierBlurb.textContent = carrier.blurb;
+  ctaLink.href = carrier.signup;
+  ctaLink.textContent = carrier.name === 'Pirate Ship' ? 'Get your free Pirate Ship account (discounts)' : 'Open ' + carrier.name + ' business signup';
+
+  resultBox.style.display='block';
+  noChoice.style.display='none';
+});
+
+/* Export CSV (small CSV of carriers) */
+document.getElementById('exportCsv').addEventListener('click', ()=>{
+  const rows = [
+    ['Carrier','Primary Service Focus','UMVP Tag','Rating','Signup URL']
+  ].concat(carriers.map(c => [c.name,c.focus,c.tag,c.rating,c.signup]));
+  const csv = rows.map(r => r.map(cell => '"'+String(cell).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'carriers.csv'; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+});
+
+/* Open Google Sheet (quick manual import guidance) */
+document.getElementById('toSheet').addEventListener('click', ()=>{
+  // We'll open Google Sheets in a new tab and show a short instruction popup
+  window.open('https://docs.google.com/spreadsheets/u/0/', '_blank');
+  alert('In the opened Google Sheets: File → Import → Upload the CSV you just downloaded. Then choose "Insert new sheet(s)".');
+});
+
+/* For debugging: show JSON data (hidden by default) */
+document.getElementById('jsonData').textContent = JSON.stringify(carriers, null, 2);
+
+/* Optional: auto-run when select changes */
+priority.addEventListener('change', () => {
+  // small convenience: call pickBtn handler automatically
+  pickBtn.click();
+});
+</script>
+</body>
+</html>
