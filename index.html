@@ -3,140 +3,718 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>usashippingguide</title>
+<title>📦 USA Shipping Guide - Find Your Perfect Carrier</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <style>
   :root{
-    --bg:#0f1724; --card:#0b1220; --muted:#9aa7b2; --accent:#06b6d4;
-    --white:#e6eef6; --success:#10b981; --danger:#f97373;
+    --primary: #4F46E5; --primary-light: #818CF8; --primary-dark: #3730A3;
+    --secondary: #06B6D4; --secondary-light: #67E8F9; --secondary-dark: #0891B2;
+    --success: #10B981; --warning: #F59E0B; --danger: #EF4444;
+    --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --bg-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --bg-card: rgba(255, 255, 255, 0.95);
+    --text-primary: #1F2937; --text-secondary: #6B7280; --text-muted: #9CA3AF;
+    --white: #FFFFFF; --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --border-radius: 16px; --border-radius-sm: 12px;
   }
-  *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
-  body{margin:0;background:linear-gradient(180deg,#071024,#0b1220);color:var(--white);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
-  .card{width:980px;max-width:96%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:28px;box-shadow:0 6px 30px rgba(2,6,23,0.6)}
-  h1{margin:0 0 6px;font-size:20px}
-  p.lead{margin:0 0 18px;color:var(--muted);font-size:14px}
-  .row{display:flex;gap:18px;align-items:flex-start}
-  .left{flex:1;min-width:260px}
-  .right{width:420px;max-width:44%}
-  label{display:block;font-size:13px;margin-bottom:8px;color:var(--muted)}
-  select,button,input{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--white);font-size:15px}
-  .result{background:linear-gradient(180deg,rgba(6,182,212,0.06),rgba(6,182,212,0.03));padding:16px;border-radius:10px;border:1px solid rgba(6,182,212,0.06);margin-bottom:12px}
-  .carrier-title{display:flex;justify-content:space-between;align-items:center}
-  .carrier-name{font-weight:600;font-size:16px}
-  .tag{font-size:13px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.03);color:var(--muted)}
-  .cta{display:block;margin-top:12px;text-decoration:none;padding:10px 12px;border-radius:8px;background:var(--accent);color:#042022;font-weight:600;text-align:center}
-  .meta{font-size:13px;color:var(--muted);margin-top:8px}
-  .foot{margin-top:14px;color:var(--muted);font-size:13px}
-  .small{font-size:13px;color:var(--muted)}
-  .controls{display:flex;gap:12px;margin-top:12px}
-  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--white)}
-  .affiliate-note{font-size:12px;color:var(--muted);margin-top:8px}
-  footer{margin-top:20px;color:var(--muted);font-size:12px}
-  @media (max-width:800px){.row{flex-direction:column}.right{width:100%}}
+  
+  * { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .header h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0 0 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  .header .subtitle {
+    font-size: 1.25rem;
+    color: var(--white);
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .main-card {
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 2.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .left-section {
+    space-y: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .form-label i {
+    color: var(--primary);
+    font-size: 1.2rem;
+  }
+
+  .priority-select {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: 2px solid #E5E7EB;
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    background: var(--white);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .priority-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .priority-select:hover {
+    border-color: var(--primary-light);
+    transform: translateY(-1px);
+  }
+
+  .controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 0.875rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    justify-content: center;
+    min-width: 120px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--white);
+    box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.4);
+  }
+
+  .btn-secondary {
+    background: var(--white);
+    color: var(--text-primary);
+    border: 2px solid #E5E7EB;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .info-box {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--warning);
+    margin-top: 2rem;
+  }
+
+  .info-box .title {
+    font-weight: 600;
+    color: #92400E;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .info-box .content {
+    font-size: 0.9rem;
+    color: #78350F;
+    line-height: 1.5;
+  }
+
+  .result-section {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .result-card {
+    background: linear-gradient(135deg, #EBF8FF 0%, #E0F2FE 100%);
+    border: 2px solid var(--secondary-light);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.1);
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .result-card.show {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  .carrier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
+  .carrier-info h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .carrier-focus {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .carrier-tag {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+  }
+
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .stars {
+    color: #F59E0B;
+    font-size: 1.1rem;
+  }
+
+  .carrier-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .cta-button {
+    display: block;
+    background: linear-gradient(135deg, var(--success) 0%, #34D399 100%);
+    color: var(--white);
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1.05rem;
+    box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.4);
+  }
+
+  .affiliate-note {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(107, 114, 128, 0.1);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+    border: 1px solid rgba(107, 114, 128, 0.1);
+  }
+
+  .no-selection {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-muted);
+  }
+
+  .no-selection i {
+    font-size: 4rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .no-selection h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+  }
+
+  .footer {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-sm);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .footer-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--white);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .footer i {
+    color: var(--warning);
+    font-size: 1.5rem;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+      transform: translate3d(0,0,0);
+    }
+    40%, 43% {
+      transform: translate3d(0, -8px, 0);
+    }
+    70% {
+      transform: translate3d(0, -4px, 0);
+    }
+    90% {
+      transform: translate3d(0, -2px, 0);
+    }
+  }
+
+  .bounce-animation {
+    animation: bounce 1s ease-in-out;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+    }
+    
+    .main-card {
+      padding: 1.5rem;
+    }
+    
+    .controls {
+      flex-direction: column;
+    }
+    
+    .btn {
+      width: 100%;
+    }
+    
+    .result-section {
+      position: static;
+    }
+    
+    .footer-content {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    body {
+      padding: 10px;
+    }
+    
+    .header h1 {
+      font-size: 2rem;
+    }
+    
+    .header .subtitle {
+      font-size: 1rem;
+    }
+    
+    .main-card {
+      padding: 1rem;
+    }
+  }
+
+  /* Ranking display */
+  .ranked-carriers {
+    background: var(--card);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .ranked-carriers h3 {
+    margin: 0 0 1.5rem;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+  }
+
+  .carrier-rank {
+    background: var(--white);
+    border-radius: var(--border-radius-sm);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease;
+  }
+
+  .carrier-rank:hover {
+    transform: translateY(-2px);
+  }
+
+  .best-choice {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--white) 100%);
+    border: 1px solid var(--primary-light);
+  }
+
+  .best-badge {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    margin-left: 0.5rem;
+  }
+
+  .score-bar-container {
+    width: 100%;
+    height: 6px;
+    background: var(--gray-100);
+    border-radius: 3px;
+    margin: 0.75rem 0;
+    overflow: hidden;
+  }
+
+  .score-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: 3px;
+    transition: width 0.5s ease-out;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent-3) 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(6, 182, 212, 0.25);
+  }
+
+  .cta-button i {
+    font-size: 0.9em;
+    opacity: 0.9;
+  }
+
+  /* Loading animation */
+  .loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 </style>
 </head>
 <body>
-<div class="card" role="main" aria-labelledby="title">
-  <h1 id="title">usashippingguide</h1>
-  <p class="lead">Pick the single most important criterion for your next shipment and we’ll recommend the best carrier & service for small e-commerce sellers. No rate APIs, instant decision, affiliate links for monetization.</p>
-
-  <div class="row">
-    <div class="left">
-      <label for="priority">What is your main priority for your next shipment?</label>
-      <select id="priority" aria-label="Select your shipping priority">
-        <option value="">— choose priority —</option>
-        <option value="cost">Lowest possible cost (I can wait 5–7 days)</option>
-        <option value="speed">Fastest possible delivery (1–3 days)</option>
-        <option value="heavy">Best rates for a 5lb+ shipment</option>
-        <option value="commercial">Lowest commercial rate possible</option>
-      </select>
-
-      <div class="controls">
-        <button id="pickBtn">Get recommendation</button>
-        <button id="exportCsv" class="ghost">Export carriers CSV</button>
-        <button id="toSheet" class="ghost">Open in Google Sheets</button>
-      </div>
-
-      <div class="foot">
-        <div class="small">Data: four core carriers (USPS, FedEx, UPS, Pirate Ship). Edit data in the JSON below if you need to tweak copy, ratings or affiliate links.</div>
-      </div>
-
-      <pre id="jsonData" style="display:none"></pre>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-shipping-fast"></i> USA Shipping Guide</h1>
+      <p class="subtitle">✨ Find your perfect shipping carrier instantly! Pick your priority and get personalized recommendations for small e-commerce sellers. No complicated rate APIs - just simple, smart choices.</p>
     </div>
 
-    <div class="right" aria-live="polite">
-      <div id="resultBox" class="result" style="display:none">
-        <div class="carrier-title">
-          <div>
-            <div class="carrier-name" id="carrierName">Carrier Name</div>
-            <div class="small" id="carrierFocus">Primary service focus</div>
+    <div class="main-card">
+      <div class="content-grid">
+        <div class="left-section">
+          <div class="form-group">
+            <label for="priority" class="form-label">
+              <i class="fas fa-bullseye"></i>
+              What's your main shipping priority?
+            </label>
+            <select id="priority" class="priority-select" aria-label="Select your shipping priority">
+              <option value="">🤔 Choose your priority...</option>
+              <option value="cost">💰 Lowest possible cost (I can wait 5–7 days)</option>
+              <option value="speed">⚡ Fastest possible delivery (1–3 days)</option>
+              <option value="heavy">📦 Best rates for 5lb+ packages</option>
+              <option value="commercial">🏢 Lowest commercial rates possible</option>
+            </select>
           </div>
-          <div class="tag" id="carrierTag">UMVP Tag</div>
+
+          <div class="controls">
+            <button id="pickBtn" class="btn btn-primary">
+              <i class="fas fa-magic"></i>
+              Get My Recommendation
+            </button>
+            <button id="exportCsv" class="btn btn-secondary">
+              <i class="fas fa-download"></i>
+              Export CSV
+            </button>
+            <button id="toSheet" class="btn btn-secondary">
+              <i class="fab fa-google"></i>
+              Open in Sheets
+            </button>
+          </div>
+
+          <div class="info-box">
+            <div class="title">
+              <i class="fas fa-info-circle"></i>
+              About Our Data
+            </div>
+            <div class="content">
+              Our recommendations include five major shipping options: <strong>USPS, FedEx, UPS, Amazon Shipping, and Pirate Ship</strong>. We focus on the needs of small e-commerce businesses and prioritize practical, cost-effective solutions.
+            </div>
+          </div>
         </div>
 
-        <div class="meta" id="carrierRating">Rating: ★★★★☆</div>
-        <p id="carrierBlurb" style="margin-top:8px;color:var(--white)"></p>
-        <a id="ctaLink" class="cta" target="_blank" rel="noopener noreferrer">Open carrier signup</a>
-        <div class="affiliate-note">This site may receive compensation for referrals. See full disclosure in footer.</div>
-      </div>
+        <div class="result-section">
+          <div id="resultBox" class="result-card" style="display:none">
+            <div class="carrier-header">
+              <div class="carrier-info">
+                <h3 id="carrierName">
+                  <i id="carrierIcon" class="fas fa-truck"></i>
+                  Carrier Name
+                </h3>
+                <div class="carrier-focus" id="carrierFocus">Primary service focus</div>
+              </div>
+              <div class="carrier-tag" id="carrierTag">BEST CHOICE</div>
+            </div>
 
-      <div id="noChoice" style="color:var(--muted)">Make a selection to see a recommendation.</div>
+            <div class="rating" id="carrierRating">
+              <span>Rating:</span>
+              <span class="stars">★★★★☆</span>
+            </div>
+            
+            <p class="carrier-description" id="carrierBlurb">Carrier description will appear here...</p>
+            
+            <a id="ctaLink" class="cta-button" target="_blank" rel="noopener noreferrer">
+              <i class="fas fa-external-link-alt"></i>
+              Open Carrier Signup
+            </a>
+            
+            <div class="affiliate-note">
+              <i class="fas fa-handshake"></i>
+              This site may receive compensation for referrals. We recommend based on typical small-business needs.
+            </div>
+          </div>
+
+          <div id="noChoice" class="no-selection">
+            <i class="fas fa-compass"></i>
+            <h3>Ready to find your perfect carrier?</h3>
+            <p>Select your shipping priority above and we'll instantly recommend the best option for your business needs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-content">
+        <i class="fas fa-shield-alt"></i>
+        <div>
+          <strong>Affiliate Disclosure:</strong> We may receive referral compensation when you sign up via our links. We recommend options based on typical small-business needs — always confirm exact prices and terms on the carrier websites.
+        </div>
+      </div>
     </div>
   </div>
 
-  <footer>
-    <div>Affiliate disclosure: We may receive referral compensation when you sign up via our links. We recommend options based on typical small-business needs — always confirm exact prices and terms on the carrier websites.</div>
-  </footer>
-</div>
-
 <script>
-/* === Data: core carriers ===
-   Keep this JSON small and editable — or load from carriers.json.
-*/
+/* === Enhanced Data with Icons ===*/
 const carriers = [
   {
     "id":"usps",
     "name":"USPS",
-    "focus":"Lightweight Parcels & Last-mile",
-    "tag":"Cost & Last-Mile",
+    "icon":"fas fa-mail-bulk",
+    "focus":"Lightweight Parcels & Last-mile Delivery",
+    "tag":"💰 Cost Leader",
     "rating":3,
-    "blurb":"Best for lightweight residential shipments and low-cost ground shipping. Good for small e-commerce sellers who prioritize price over speed.",
-    "signup":"https://www.usps.com/business/online-shipping.htm"
+    "blurb":"Perfect for lightweight residential shipments and budget-conscious sellers. USPS excels at last-mile delivery with competitive rates for packages under 2lbs. Great for small e-commerce businesses prioritizing affordability over speed.",
+    "signup":"https://www.usps.com/"
   },
   {
     "id":"fedex",
     "name":"FedEx",
-    "focus":"Express / B2B Ground",
-    "tag":"Speed & Reliability",
+    "icon":"fas fa-plane",
+    "focus":"Express Delivery & Time-Critical Shipments",
+    "tag":"⚡ Speed Champion",
     "rating":4,
-    "blurb":"Strong for express and time-sensitive deliveries. Better for B2B and urgent deliveries where speed and reliability matter.",
+    "blurb":"The gold standard for express and time-sensitive deliveries. FedEx shines with reliable overnight and 2-day services, making it ideal for urgent shipments and businesses where speed and reliability are paramount.",
     "signup":"https://www.fedex.com/en-us/shipping/online-tools.html"
   },
   {
     "id":"ups",
     "name":"UPS",
-    "focus":"Heavy/Volume Ground & Freight",
-    "tag":"Heavier / Volume",
+    "icon":"fas fa-truck-loading",
+    "focus":"Heavy Packages & High-Volume Shipping",
+    "tag":"📦 Heavy Hauler",
     "rating":4,
-    "blurb":"Good for heavier packages and higher volume shops. Strong ground network and many business tools for frequent shippers.",
+    "blurb":"Your go-to for heavier packages (5lbs+) and high-volume operations. UPS offers robust ground network coverage and comprehensive business tools, making it perfect for growing e-commerce businesses with regular shipping needs.",
     "signup":"https://www.ups.com/us/en/support/create-an-account.page"
   },
   {
     "id":"pirateship",
     "name":"Pirate Ship",
-    "focus":"Parcel broker / discounted rates",
-    "tag":"Best Rates (Discount)",
+    "icon":"fas fa-ship",
+    "focus":"Discount Broker with Commercial Rates",
+    "tag":"🏆 Best Value",
     "rating":5,
-    "blurb":"Parcel broker that exposes deep discounts for USPS and others. Great for low commercial rates and sellers who want simple discounts without contracts.",
+    "blurb":"The secret weapon for savvy sellers! This free platform unlocks deep commercial discounts on USPS and other carriers without volume requirements or monthly fees. Perfect for businesses wanting professional rates with zero commitment.",
     "signup":"https://www.pirateship.com/?ref=your-affiliate-code"
+  },
+  {
+    "id":"amazon",
+    "name":"Amazon Shipping",
+    "icon":"fab fa-amazon",
+    "focus":"Fast Prime-like Delivery Experience",
+    "tag":"🚀 Prime Speed",
+    "rating":4,
+    "blurb":"Direct access to Amazon's massive delivery network. Offers Prime-like delivery speeds and tracking experience. Ideal for sellers wanting to provide Amazon-grade shipping without using FBA. Best for urban/suburban destinations.",
+    "signup":"https://shipping.amazon.com"
   }
 ];
 
-/* Mapping user option -> recommended carrier(s) */
-const mapping = {
-  "cost":"usps",
-  "speed":"fedex",
-  "heavy":"ups",
-  "commercial":"pirateship"
+/* Enhanced priority-based ranking system */
+const priorityRankings = {
+  "cost": {
+    "usps": 5,       // Best for low cost
+    "pirateship": 4, // Good discounted rates
+    "ups": 2,        // More expensive
+    "fedex": 1,      // Premium pricing
+    "amazon": 3      // Moderate pricing
+  },
+  "speed": {
+    "fedex": 5,      // Premier express service
+    "amazon": 5,     // Prime-like speeds
+    "ups": 4,        // Good express options
+    "usps": 2,       // Priority mail decent
+    "pirateship": 3  // Uses other carriers
+  },
+  "heavy": {
+    "ups": 5,        // Best for heavy packages
+    "fedex": 4,      // Good heavy handling
+    "amazon": 3,     // Limited by weight
+    "usps": 1,       // Not for heavy items
+    "pirateship": 4  // Good rates for heavy
+  },
+  "commercial": {
+    "pirateship": 5, // Best commercial rates
+    "ups": 4,        // Good business rates
+    "fedex": 4,      // Strong business options
+    "amazon": 3,     // Limited commercial options
+    "usps": 3        // Basic commercial rates
+  }
+};
+
+const carrierIcons = {
+  "usps": "fas fa-mail-bulk",
+  "fedex": "fas fa-plane", 
+  "ups": "fas fa-truck-loading",
+  "amazon": "fab fa-amazon",
+  "pirateship": "fas fa-ship"
 };
 
 /* Utilities */
@@ -146,11 +724,12 @@ function ratingStars(n){
   return '★'.repeat(n) + '☆'.repeat(5-n);
 }
 
-/* UI hooks */
+/* UI Elements */
 const priority = document.getElementById('priority');
 const pickBtn = document.getElementById('pickBtn');
 const resultBox = document.getElementById('resultBox');
 const carrierName = document.getElementById('carrierName');
+const carrierIcon = document.getElementById('carrierIcon');
 const carrierFocus = document.getElementById('carrierFocus');
 const carrierTag = document.getElementById('carrierTag');
 const carrierRating = document.getElementById('carrierRating');
@@ -158,52 +737,212 @@ const carrierBlurb = document.getElementById('carrierBlurb');
 const ctaLink = document.getElementById('ctaLink');
 const noChoice = document.getElementById('noChoice');
 
-pickBtn.addEventListener('click', ()=> {
+/* Enhanced recommendation logic with animations */
+function showRecommendation() {
   const val = priority.value;
-  if(!val){ resultBox.style.display='none'; noChoice.style.display='block'; return; }
-  const cid = mapping[val];
-  const carrier = getCarrierById(cid);
-  if(!carrier){ resultBox.style.display='none'; noChoice.style.display='block'; return; }
+  if(!val) {
+    hideResult();
+    return;
+  }
 
-  carrierName.textContent = carrier.name;
-  carrierFocus.textContent = carrier.focus;
-  carrierTag.textContent = carrier.tag;
-  carrierRating.textContent = 'Rating: ' + ratingStars(carrier.rating);
-  carrierBlurb.textContent = carrier.blurb;
-  ctaLink.href = carrier.signup;
-  ctaLink.textContent = carrier.name === 'Pirate Ship' ? 'Get your free Pirate Ship account (discounts)' : 'Open ' + carrier.name + ' business signup';
+  // Add loading state
+  pickBtn.innerHTML = '<span class="loading"></span> Ranking all carriers...';
+  pickBtn.disabled = true;
 
-  resultBox.style.display='block';
-  noChoice.style.display='none';
-});
+  setTimeout(() => {
+    // Get rankings for selected priority
+    const rankings = priorityRankings[val];
+    
+    // Sort carriers by their ranking
+    const rankedCarriers = carriers
+      .map(carrier => ({
+        ...carrier,
+        priorityScore: rankings[carrier.id]
+      }))
+      .sort((a, b) => b.priorityScore - a.priorityScore);
 
-/* Export CSV (small CSV of carriers) */
+    // Get the best carrier
+    const bestCarrier = rankedCarriers[0];
+    
+    if(!bestCarrier) {
+      hideResult();
+      return;
+    }
+
+    // Update main recommendation
+    carrierName.innerHTML = `<i class="${carrierIcons[bestCarrier.id]}"></i> ${bestCarrier.name}`;
+    carrierIcon.className = carrierIcons[bestCarrier.id];
+    carrierFocus.textContent = bestCarrier.focus;
+    carrierTag.textContent = `${bestCarrier.tag} • Score: ${bestCarrier.priorityScore}/5`;
+    carrierRating.innerHTML = `<span>Rating:</span><span class="stars">${ratingStars(bestCarrier.rating)}</span>`;
+    carrierBlurb.textContent = bestCarrier.blurb;
+    ctaLink.href = bestCarrier.signup;
+
+    // Show all carriers ranked by priority score
+    const rankedList = document.createElement('div');
+    rankedList.className = 'ranked-carriers';
+    rankedList.innerHTML = '<h3>All Carriers Ranked by Your Priority</h3>';
+
+    rankedCarriers.forEach((c, index) => {
+      const scoreWidth = (c.priorityScore * 20); // 20% per point
+      const div = document.createElement('div');
+      div.className = `carrier-rank ${index === 0 ? 'best-choice' : ''}`;
+      
+      div.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:600">
+            <i class="${carrierIcons[c.id]}"></i> 
+            ${c.name}
+            ${index === 0 ? '<span class="best-badge">Best Choice</span>' : ''}
+          </div>
+          <div style="color:var(--accent-2);font-weight:600">${c.priorityScore}/5</div>
+        </div>
+        <div class="score-bar-container">
+          <div class="score-bar" style="width:${scoreWidth}%"></div>
+        </div>
+        <div style="font-size:0.9rem;color:var(--text-secondary);margin-top:0.5rem">
+          ${c.focus}
+        </div>
+        <div style="margin-top:1rem">
+          <a href="${c.signup}" class="cta-button" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-external-link-alt"></i> 
+            Open ${c.name} Signup
+          </a>
+        </div>
+      `;
+      rankedList.appendChild(div);
+    });
+
+    // Replace the old result area with the new ranked list
+    const resultArea = document.querySelector('.result-section');
+    resultArea.innerHTML = '';
+    resultArea.appendChild(rankedList);
+    
+    // Enhanced CTA text
+    const ctaTexts = {
+      "usps": "🏤 Start with USPS Business Account",
+      "fedex": "✈️ Get FedEx Express Account", 
+      "ups": "🚚 Create UPS Business Account",
+      "pirateship": "🏴‍☠️ Get FREE Pirate Ship Account"
+    };
+    
+    ctaLink.innerHTML = `<i class="fas fa-external-link-alt"></i> ${ctaTexts[carrier.id]}`;
+
+    // Show result with animation
+    resultBox.style.display = 'block';
+    noChoice.style.display = 'none';
+    
+    setTimeout(() => {
+      resultBox.classList.add('show');
+      resultBox.classList.add('bounce-animation');
+    }, 50);
+
+    // Reset button
+    pickBtn.innerHTML = '<i class="fas fa-magic"></i> Get My Recommendation';
+    pickBtn.disabled = false;
+
+    // Remove bounce animation after completion
+    setTimeout(() => {
+      resultBox.classList.remove('bounce-animation');
+    }, 1000);
+
+  }, 1200); // Simulate processing time
+}
+
+function hideResult() {
+  resultBox.classList.remove('show');
+  setTimeout(() => {
+    resultBox.style.display = 'none';
+    noChoice.style.display = 'block';
+  }, 300);
+  
+  pickBtn.innerHTML = '<i class="fas fa-magic"></i> Get My Recommendation';
+  pickBtn.disabled = false;
+}
+
+/* Event Listeners */
+pickBtn.addEventListener('click', showRecommendation);
+
+/* Enhanced CSV Export */
 document.getElementById('exportCsv').addEventListener('click', ()=>{
   const rows = [
-    ['Carrier','Primary Service Focus','UMVP Tag','Rating','Signup URL']
-  ].concat(carriers.map(c => [c.name,c.focus,c.tag,c.rating,c.signup]));
+    ['Carrier','Primary Service Focus','Tag','Rating','Signup URL','Best For']
+  ];
+  
+  carriers.forEach(c => {
+    const bestFor = {
+      'usps': 'Lightweight packages, budget shipping',
+      'fedex': 'Express delivery, time-critical shipments', 
+      'ups': 'Heavy packages, high-volume businesses',
+      'pirateship': 'Commercial discounts, all package types'
+    };
+    rows.push([c.name, c.focus, c.tag, c.rating, c.signup, bestFor[c.id]]);
+  });
+  
   const csv = rows.map(r => r.map(cell => '"'+String(cell).replace(/"/g,'""')+'"').join(',')).join('\n');
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = 'carriers.csv'; document.body.appendChild(a); a.click(); a.remove();
+  a.href = url; 
+  a.download = 'usa-shipping-carriers.csv'; 
+  document.body.appendChild(a); 
+  a.click(); 
+  a.remove();
   URL.revokeObjectURL(url);
+  
+  // Show success feedback
+  const btn = document.getElementById('exportCsv');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-check"></i> Downloaded!';
+  btn.style.background = 'var(--success)';
+  btn.style.color = 'white';
+  
+  setTimeout(() => {
+    btn.innerHTML = originalText;
+    btn.style.background = '';
+    btn.style.color = '';
+  }, 2000);
 });
 
-/* Open Google Sheet (quick manual import guidance) */
+/* Enhanced Google Sheets integration */
 document.getElementById('toSheet').addEventListener('click', ()=>{
-  // We'll open Google Sheets in a new tab and show a short instruction popup
   window.open('https://docs.google.com/spreadsheets/u/0/', '_blank');
-  alert('In the opened Google Sheets: File → Import → Upload the CSV you just downloaded. Then choose "Insert new sheet(s)".');
+  
+  // Modern notification instead of alert
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed; top: 20px; right: 20px; 
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white; padding: 1rem 1.5rem; border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+    z-index: 1000; font-weight: 600;
+    animation: fadeInUp 0.3s ease-out;
+  `;
+  notification.innerHTML = `
+    <i class="fas fa-info-circle"></i>
+    In Google Sheets: File → Import → Upload your downloaded CSV
+  `;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.remove();
+  }, 5000);
 });
 
-/* For debugging: show JSON data (hidden by default) */
-document.getElementById('jsonData').textContent = JSON.stringify(carriers, null, 2);
-
-/* Optional: auto-run when select changes */
+/* Auto-run on selection change */
 priority.addEventListener('change', () => {
-  // small convenience: call pickBtn handler automatically
-  pickBtn.click();
+  if(priority.value) {
+    showRecommendation();
+  }
+});
+
+/* Add some interactive feedback */
+priority.addEventListener('focus', () => {
+  priority.style.transform = 'scale(1.02)';
+});
+
+priority.addEventListener('blur', () => {
+  priority.style.transform = 'scale(1)';
 });
 </script>
 </body>

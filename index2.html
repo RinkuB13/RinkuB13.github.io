@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amorphic Chess Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #0b0b0b, #000);
+      font-family: 'Inter', sans-serif;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      position: absolute;
+      top: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 1.8em;
+      color: #f1f1f1;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+      z-index: 10;
+    }
+
+    #cta {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      padding: 12px 22px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(37,117,252,0.6);
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+
+    #cta:hover {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: 0 0 25px rgba(106,17,203,0.8);
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>♟️ Amorphic Chess Viewer (UMVP)</h1>
+  <div id="cta" onclick="window.open('https://amorphicview.app', '_blank')">
+    👑 Get the $2 Founder's Pass at AmorphicView.app
+  </div>
+
+  <!-- ✅ Three.js core -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+
+  <!-- ✅ Correct OrbitControls import -->
+  <script type="module">
+    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/controls/OrbitControls.js';
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
+    import TWEEN from 'https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@18.6.4/dist/tween.esm.js';
+
+    // Scene setup
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(
+      120, // "Amorphic" wide FoV
+      window.innerWidth / window.innerHeight,
+      0.1,
+      3000
+    );
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    document.body.appendChild(renderer.domElement);
+
+    // Lighting
+    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambient);
+
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    dirLight.position.set(100, 200, 300);
+    scene.add(dirLight);
+
+    // Orbit controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // Function to create the 3D board
+    function createBoard(scale = 10) {
+      const size = 8;
+      const geometry = new THREE.BoxGeometry(scale, scale, 2);
+
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          const color = (i + j) % 2 === 0 ? 0xffffff : 0x111111;
+          const material = new THREE.MeshStandardMaterial({ color });
+          const square = new THREE.Mesh(geometry, material);
+          square.position.set(i * scale, j * scale, 0);
+          scene.add(square);
+        }
+      }
+
+      // Center camera and controls
+      const boardCenter = (size * scale) / 2;
+      controls.target.set(boardCenter, boardCenter, 0);
+      camera.lookAt(boardCenter, boardCenter, 0);
+      controls.update();
+
+      // Start camera farther back for cinematic fly-in
+      camera.position.set(boardCenter - 80, boardCenter - 200, 300);
+
+      new TWEEN.Tween(camera.position)
+        .to({ x: boardCenter + 50, y: boardCenter + 50, z: 150 }, 3500)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .start();
+    }
+
+    createBoard(10);
+
+    // Resize handling
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Animate loop
+    function animate(time) {
+      requestAnimationFrame(animate);
+      controls.update();
+      TWEEN.update(time);
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
